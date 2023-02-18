@@ -7,8 +7,8 @@ import static org.junit.jupiter.api.Assertions.*;
 class JsonCastingExceptionTest {
     @Test
     void canBeCreateWithInnerException() {
-        assertDoesNotThrow(()-> {
-            new JsonCastingException(new RuntimeException());
+        assertThrowsExactly(JsonCastingException.class, ()-> {
+            throw new JsonCastingException(new RuntimeException());
         });
     }
 }

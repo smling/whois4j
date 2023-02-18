@@ -7,15 +7,15 @@ import static org.junit.jupiter.api.Assertions.*;
 class DomainNameLookupExceptionTest {
     @Test
     void canBeCreateWithMessage() {
-        assertDoesNotThrow(()-> {
-            new DomainNameLookupException("This is test exception.");
+        assertThrowsExactly(DomainNameLookupException.class, ()-> {
+            throw new DomainNameLookupException("This is test exception.");
         });
     }
 
     @Test
     void canBeCreateWithMessageAndInnerException() {
-        assertDoesNotThrow(()-> {
-            new DomainNameLookupException("This is test exception", new RuntimeException());
+        assertThrowsExactly(DomainNameLookupException.class, ()-> {
+            throw new DomainNameLookupException("This is test exception", new RuntimeException());
         });
     }
 }
