@@ -81,6 +81,9 @@ public class WhoIsClient {
      * @return Lookup response in String.
      */
     private String lookup(String domainName, Server server) {
+        if(StringUtil.INSTANCE.isNullOrBlank(domainName)) {
+            throw new DomainNameLookupException("domainName could not be null, empty or blank.");
+        }
         String lookupServerHostName = getWhoisLookupHost(server);
         String result;
         try(Socket lookupServerSocket = new Socket(lookupServerHostName, DEFAULT_WHOIS_LOOKUP_PORT)) {

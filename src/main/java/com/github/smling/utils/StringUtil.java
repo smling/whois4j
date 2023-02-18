@@ -20,7 +20,7 @@ public enum StringUtil {
         if(Objects.isNull(value)) {
             return true;
         }
-        return isNullOrEmpty(value.replace(" ", ""));
+        return isNullOrEmpty(value.replace(" ", EMPTY_STRING));
     }
 
     /**
