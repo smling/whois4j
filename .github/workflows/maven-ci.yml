@@ -23,6 +23,9 @@ jobs:
       - name: Run unit tests
         run: mvn test
 
+      - name: Generate JUnit XML test report
+        run: mvn surefire-report:report-only
+        
       - name: Run SonarCloud analysis
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -30,3 +33,10 @@ jobs:
           SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
           SONAR_ORGANIZATIONS_KEY: ${{ secrets.SONAR_ORGANIZATIONS_KEY }}
         run: mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.9.0.2155:sonar -Dsonar.projectKey=$SONAR_PROJECT_KEY -Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=$SONAR_ORGANIZATIONS_KEY
+        
+
+      - name: Publish JUnit test report
+        uses: actions/upload-artifact@v2
+        with:
+          name: junit-report
+          path: target/surefire-reports/
