@@ -34,6 +34,9 @@ jobs:
         with:
           source: ./
           destination: ./_site
+      - name: Copy out file from volume
+        run: |
+          sudo cp ./_site /home/
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
 
