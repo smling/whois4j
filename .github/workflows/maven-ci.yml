@@ -23,7 +23,7 @@ jobs:
       - name: Run unit tests
         run: mvn test
 
-      - name: Run unit tests
+      - name: Generate coverage report
         run: mvn jacoco:report
 
       - name: Generate JUnit XML test report
