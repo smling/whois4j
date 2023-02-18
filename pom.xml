@@ -21,7 +21,7 @@
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>3.5.0</version>
                 <configuration>
-                    <destDir>doc</destDir>
+                    <destDir>docs</destDir>
                 </configuration>
             </plugin>
             <plugin>
