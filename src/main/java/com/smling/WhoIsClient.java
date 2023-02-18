@@ -119,6 +119,7 @@ public class WhoIsClient {
                 DEFAULT_WHOIS_LOOKUP_QUERY :
                 lookupServer.getQuery();
         return query.replace("$addr", domainName);
+
     }
 
     private String getDomainNameSuffix(String domainName) {

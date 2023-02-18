@@ -5,13 +5,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ Data Access Object (DAO) from server.json.
+ Store the mapping between suffix, whois lookup server and server settings.
+ */
 @Getter
 @Setter
 @NoArgsConstructor
-/*
-  Data Access Object (DAO) from server.json.
-  Store the mapping between suffix, whois lookup server and server settings.
- */
 public class Server {
     /**
      * Domain name suffix.
