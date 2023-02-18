@@ -24,7 +24,7 @@ jobs:
         run: mvn test
 
       - name: Run SonarCloud analysis
-        run: ./mvnw -B verify sonar:sonar -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }} -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN
+        run: mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.9.0.2155:sonar -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }} -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
