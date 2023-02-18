@@ -1,10 +1,10 @@
-package com.smling;
+package com.github.smling;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.smling.dao.Server;
-import com.smling.exceptions.DomainNameLookupException;
-import com.smling.exceptions.JsonCastingException;
-import com.smling.utils.StringUtil;
+import com.github.smling.dao.Server;
+import com.github.smling.exceptions.DomainNameLookupException;
+import com.github.smling.exceptions.JsonCastingException;
+import com.github.smling.utils.StringUtil;
 
 import java.io.*;
 import java.net.Socket;

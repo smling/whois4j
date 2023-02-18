@@ -1,4 +1,4 @@
-package com.smling.exceptions;
+package com.github.smling.exceptions;
 
 /**
  * Exception for error occurred during lookup domain name.

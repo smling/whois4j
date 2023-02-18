@@ -1,4 +1,4 @@
-package com.smling;
+package com.github.smling;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

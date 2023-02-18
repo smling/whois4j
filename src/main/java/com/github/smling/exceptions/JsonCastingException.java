@@ -1,4 +1,4 @@
-package com.smling.exceptions;
+package com.github.smling.exceptions;
 
 /**
  * Exception for Casting Json to DAO or DTO.

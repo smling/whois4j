@@ -1,4 +1,4 @@
-package com.smling.utils;
+package com.github.smling.utils;
 
 import java.util.Objects;
 

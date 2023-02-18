@@ -1,4 +1,4 @@
-package com.smling.dao;
+package com.github.smling.dao;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
