@@ -21,7 +21,7 @@ jobs:
         run: mvn package
 
       - name: Get package version
-        run: echo "packageVersion=$(mvn org.apache.maven.plugins:maven-help-plugin:3.2.0:evaluate -Dexpression=project.version -q -DforceStdout)" > $GITHUB_ENV
+        run: echo "packageVersion=v$(mvn org.apache.maven.plugins:maven-help-plugin:3.2.0:evaluate -Dexpression=project.version -q -DforceStdout)" > $GITHUB_ENV
 
       - name: Generate Javadoc
         run: mvn javadoc:javadoc
@@ -32,8 +32,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release v${{ env.packageVersion }}
+          tag_name: ${{ env.packageVersion }}
+          release_name: Release ${{ env.packageVersion }}
           body: |
             This is the first release of the project.
           draft: false
