@@ -26,22 +26,13 @@ jobs:
       - name: Generate Javadoc
         run: mvn javadoc:javadoc
 
-      - name: Setup git config
-        run: |
-          git config --global user.name "GitHub Actions"
-          git config --global user.email "actions@github.com"
-      - name: Create tag
-        run: |
-          git tag v${{ env.packageVersion }}
-          git push origin v${{ env.packageVersion }}
-
       - name: Create release
         id: create_release
         uses: actions/create-release@main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v${{ env.packageVersion }}
+          tag_name: ${{ github.ref }}
           release_name: Release v${{ env.packageVersion }}
           body: |
             This is the first release of the project.
