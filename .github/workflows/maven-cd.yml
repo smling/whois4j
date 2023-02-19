@@ -18,7 +18,7 @@ jobs:
           java-version: 17
 
       - name: Build with Maven
-        run: mvn package
+        run: mvn -B package --file pom.xml
 
       - name: Get package version
         run: echo "packageVersion=v$(mvn org.apache.maven.plugins:maven-help-plugin:3.2.0:evaluate -Dexpression=project.version -q -DforceStdout)" > $GITHUB_ENV
@@ -38,6 +38,11 @@ jobs:
             This is the first release of the project.
           draft: false
           prerelease: false
+
+      - name: Publish to GitHub Packages Apache Maven
+        run: mvn deploy -s $GITHUB_WORKSPACE/settings.xml
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
 
       - name: Upload Javadoc
         uses: actions/upload-artifact@v2
