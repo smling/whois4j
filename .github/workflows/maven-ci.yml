@@ -27,6 +27,8 @@ jobs:
         run: mvn jacoco:report
 
       - name: OWASP dependency check
+        env:
+          JAVA_HOME: /opt/jdk
         uses: dependency-check/Dependency-Check_Action@main
         with:
           project: 'whois4j'
