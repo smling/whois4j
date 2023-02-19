@@ -27,10 +27,11 @@ jobs:
         run: mvn javadoc:javadoc
 
       - name: Bump version and push tag
-        uses: laputansoft/github-tag-action@4.6
+        uses: negz/create-tag@v1
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          tag: v${{ env.packageVersion }}
+          version: v${{ env.packageVersion }}
+          message: ${{ github.event.inputs.message }}
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create release
         id: create_release
