@@ -26,6 +26,14 @@ jobs:
       - name: Generate coverage report
         run: mvn jacoco:report
 
+      - name: OWASP dependency check
+        uses: dependency-check/Dependency-Check_Action@main
+        with:
+          project: 'whois4j'
+          path: '.'
+          format: 'HTML'
+          out: target/site/owasp_dependency_check_report
+
       - name: Generate JUnit XML test report
         run: mvn surefire-report:report-only
         
@@ -36,7 +44,6 @@ jobs:
           SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
           SONAR_ORGANIZATIONS_KEY: ${{ secrets.SONAR_ORGANIZATIONS_KEY }}
         run: mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.9.0.2155:sonar -Pcoverage -Dsonar.projectKey=$SONAR_PROJECT_KEY -Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=$SONAR_ORGANIZATIONS_KEY
-        
 
       - name: Publish JUnit test report
         uses: actions/upload-artifact@v2
@@ -44,8 +51,14 @@ jobs:
           name: junit-report
           path: target/surefire-reports/
 
-      - name: Publish Jacoco Coverage Report
+      - name: Publish Jacoco coverage report
         uses: actions/upload-artifact@v2
         with:
           name: coverage-report
           path: target/site/jacoco/
+
+      - name: Publish Dependency check report
+        uses: actions/upload-artifact@v2
+        with:
+          name: coverage-report
+          path: target/site/owasp_dependency_check_report
