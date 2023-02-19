@@ -26,12 +26,14 @@ jobs:
       - name: Generate Javadoc
         run: mvn javadoc:javadoc
 
-      - name: Bump version and push tag
-        uses: negz/create-tag@v1
-        with:
-          version: v${{ env.packageVersion }}
-          message: ${{ github.event.inputs.message }}
-          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Setup git config
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+      - name: Create tag
+        run: |
+          git tag v${{ env.packageVersion }}
+          git push origin v${{ env.packageVersion }}
 
       - name: Create release
         id: create_release
