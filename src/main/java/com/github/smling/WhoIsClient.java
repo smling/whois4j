@@ -4,10 +4,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.smling.dao.Server;
 import com.github.smling.exceptions.DomainNameLookupException;
 import com.github.smling.exceptions.JsonCastingException;
+import com.github.smling.utils.DomainNameUtil;
+import com.github.smling.utils.IpAddressChecker;
 import com.github.smling.utils.StringUtil;
 
 import java.io.*;
 import java.net.Socket;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
@@ -62,11 +65,24 @@ public class WhoIsClient {
 
     /**
      * Whois lookup domain name.
+     * @param url URL to be lookup.
+     * @return Lookup(domainName);
+     */
+    public String lookup(URL url) {
+        String domainName = DomainNameUtil.INSTANCE.getDomainNameByUrl(url);
+        if(IpAddressChecker.INSTANCE.isIPv4Address(domainName)) {
+            throw new DomainNameLookupException("Domain name could be be IP address.");
+        }
+        return lookup(domainName);
+    }
+
+    /**
+     * Whois lookup domain name.
      * @param domainName Domain name to be lookup.
      * @return Lookup response in String.
      */
     public String lookup(String domainName) {
-        String domainNameSuffix = getDomainNameSuffix(domainName);
+        String domainNameSuffix = DomainNameUtil.INSTANCE.getDomainNameSuffix(domainName);
         Server lookupServer = servers.stream()
                 .filter(o->domainNameSuffix.equals(o.getSuffix()))
                 .findFirst()
@@ -91,10 +107,7 @@ public class WhoIsClient {
             lookupServerSocket.setTcpNoDelay(DEFAULT_WHOIS_LOOKUP_SOCKET_TCP_NO_DELAY);
             String query = getWhoisLookupQuery(domainName, server);
             OutputStream outputStream = lookupServerSocket.getOutputStream();
-            byte[] queryByte = server.isPunyCode() ?
-                    query.getBytes(StandardCharsets.US_ASCII) :
-                    query.getBytes(StandardCharsets.ISO_8859_1)
-                    ;
+            byte[] queryByte = query.getBytes(StandardCharsets.ISO_8859_1);
             outputStream.write(queryByte);
             BufferedReader reader = new BufferedReader(new InputStreamReader(lookupServerSocket.getInputStream()));
             StringBuilder response = new StringBuilder(StringUtil.EMPTY_STRING);
@@ -123,16 +136,5 @@ public class WhoIsClient {
                 lookupServer.getQuery();
         return query.replace("$addr", domainName);
 
-    }
-
-    private String getDomainNameSuffix(String domainName) {
-        if(StringUtil.INSTANCE.isNullOrBlank(domainName)) {
-            return StringUtil.EMPTY_STRING;
-        }
-        int index = domainName.lastIndexOf(".");
-        if(index < 0) {
-            return StringUtil.EMPTY_STRING;
-        }
-        return domainName.substring(index+1);
     }
 }
