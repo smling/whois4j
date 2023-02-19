@@ -26,9 +26,15 @@ jobs:
       - name: Generate Javadoc
         run: mvn javadoc:javadoc
 
-      - name: Create Release
+      - name: Bump version and push tag
+        uses: laputansoft/github-tag-action@main
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          tag: v${{ env.packageVersion }}
+
+      - name: Create release
         id: create_release
-        uses: actions/create-release@v1
+        uses: actions/create-release@main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
