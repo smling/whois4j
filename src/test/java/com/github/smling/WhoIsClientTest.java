@@ -74,7 +74,8 @@ class WhoIsClientTest {
                 Arguments.of("gov.uk"),
                 Arguments.of("yahoo.com.hk"),
                 Arguments.of("apple"),
-                Arguments.of("google.co.az")
+                Arguments.of("google.co.az"),
+                Arguments.of("github.com")
         );
     }
 
