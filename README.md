@@ -76,4 +76,4 @@ public class sample {
 }
 ```
 # Package version
-See [GitHub Package](https://github.com/smling/whois4j/packages/1793913).
+See [GitHub Package](https://github.com/smling/whois4j/packages/1793913) for more details.
