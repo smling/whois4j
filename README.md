@@ -12,19 +12,68 @@ Maven-based library project for whois lookup.
 ## Why whois4j?
 Compare with existing Java library. there are several advantage as below:
 
-|                   | Apache Common Library            | Whois XML API                          | whois4j                                          |
-|-------------------|----------------------------------|----------------------------------------|--------------------------------------------------|
-| Data source       | Less. Only lookup whois.nina.org | Variant, but not mentioned in website. | Variant source depends on domain name root zone. |
-| API Key required  | No                               | Yes                                    | No                                               |
-| Structural Data   | No                               | Yes                                    | To-be support                                    |
-| Geo location Data | No                               | Yes                                    | To-be support                                    |
+|                   | Apache Common Net Library [^1]          | Whois XML API [^2]                          |                        whois4j                         |
+|-------------------|-----------------------------------------|---------------------------------------------|:------------------------------------------------------:|
+| Data source       | Less. <br/>(Only lookup whois.nina.org) | Variant<br/>(but not mentioned in website.) | Variant<br/>(source depends on domain name root zone.) |
+| API Key required  | No                                      | Yes                                         |                           No                           |
+| Structural Data   | No                                      | Yes                                         |                     To-be support                      |
+| Geo location Data | No                                      | Yes                                         |                     To-be support                      |
+
+[^1]https://github.com/NandanDesai/Apache-Commons-Net-WhoisClient
+
+[^2]https://github.com/whois-api-llc/whois2
 
 # Installation
-See [GitHub Package](https://github.com/smling/whois4j/packages/1793913).
+It stores in GitHub repository so need to customize for custom repository
 
-# Development
-You can fork or clone this repository to customize and fit your needed.
-## Compile
-```shell
-mvn clean install
+## Maven
+Set tings in `setting.xml` for point to GitHub package repository.
+```xml
+<repositories>
+    <repository>
+        <id>github</id>
+        <name>GitHub smling whois4j Packages</name>
+        <url>https://maven.pkg.github.com/smling/whois4j</url>
+        <releases><enabled>true</enabled></releases>
+        <snapshots><enabled>true</enabled></snapshots>
+    </repository>
+</repositories>
 ```
+Settings in `pom.xml` for adding dependency.
+```xml
+<dependency>
+    <groupId>com.github.smling</groupId>
+    <artifactId>whois4j</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+</dependency>
+```
+
+## Gradle
+
+Settings in `build.gradle`, which will add custom repository and package.
+```groove
+repositories {
+    maven {
+        name = "GitHub smling whois4j Packages"
+        url = "https://maven.pkg.github.com/smling/whois4j"
+    }
+}
+dependencies {
+    implementation('com.github.smling:whois4j:1.0.0-SNAPSHOT')
+}
+```
+# Usage
+Sample code to get whois response of domain `github.com`.
+```java
+import com.github.smling.WhoIsClient;
+
+public class sample {
+    public static void main(String[] args) {
+        WhoIsClient whoIsClient = new WhoIsClient();
+        String result = whoIsClient.lookup("github.com");
+        System.out.println("whois lookup response: \n" + result);
+    }
+}
+```
+# Package version
+See [GitHub Package](https://github.com/smling/whois4j/packages/1793913).
