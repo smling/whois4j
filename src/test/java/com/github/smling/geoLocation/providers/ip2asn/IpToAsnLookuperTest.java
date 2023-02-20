@@ -20,24 +20,26 @@ class IpToAsnLookuperTest {
 
     @ParameterizedTest
     @MethodSource("mockGetCountryCodeHappyCase")
-    void getCountryCode(String domainName) {
+    void getCountryCodeHappyCase(String domainName, int expectedResult) {
         assertDoesNotThrow(()-> {
             IpToAsnLookuper ipToAsnLookuper = new IpToAsnLookuper();
             List<String> countriesCode = ipToAsnLookuper.getCountryCode(domainName);
             assertNotNull(countriesCode, "Return country code not null. value: "+countriesCode);
-            assertTrue(countriesCode.size() > 0, "At least one country code returned");
+            assertEquals(expectedResult, countriesCode.size(), "At least one country code returned");
             System.out.println("lookup country code: "+countriesCode);
         });
     }
 
     static Stream<Arguments> mockGetCountryCodeHappyCase() {
         return Stream.of(
-                Arguments.of("google.com"),
-                Arguments.of("lidi.co.uk"),
-                Arguments.of("gov.uk"),
-                Arguments.of("yahoo.com.hk"),
-                Arguments.of("google.co.az"),
-                Arguments.of("github.com")
+                Arguments.of("google.com", 1),
+                Arguments.of("lidi.co.uk", 1),
+                Arguments.of("gov.uk", 1),
+                Arguments.of("yahoo.com.hk", 2),
+                Arguments.of("google.co.az", 1),
+                Arguments.of("github.com", 1),
+                Arguments.of("", 1),
+                Arguments.of(null, 1)
         );
     }
 }
