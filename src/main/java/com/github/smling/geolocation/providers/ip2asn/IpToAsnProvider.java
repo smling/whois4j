@@ -1,14 +1,16 @@
-package com.github.smling.geoLocation.providers.ip2asn;
+package com.github.smling.geolocation.providers.ip2asn;
 
 import com.github.smling.exceptions.DataFileAccessException;
 import com.github.smling.exceptions.GeoLocationLookupException;
-import com.github.smling.geoLocation.providers.ip2asn.dao.Ipv4ToAsn;
+import com.github.smling.geolocation.providers.ip2asn.dao.Ipv4ToAsn;
 import com.github.smling.utils.IpAddressChecker;
 import com.github.smling.utils.StringUtil;
 import com.opencsv.CSVParser;
 import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,13 +21,15 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class IpToAsnLookuper {
+public class IpToAsnProvider {
+    private final Log logger = LogFactory.getLog(IpToAsnProvider.class);
     private final List<Ipv4ToAsn> ipv4ToAsnList = new ArrayList<>();
-    public IpToAsnLookuper() {
+    public IpToAsnProvider() {
         this(IpAddressChecker.class.getResourceAsStream("/ip2asn/ip2asn-v4.tsv"));
     }
 
-    public IpToAsnLookuper(InputStream inputStream) {
+
+    public IpToAsnProvider(InputStream inputStream) {
             Reader inputSteamReader = new InputStreamReader(inputStream);
             CSVParser csvParser = new CSVParserBuilder()
                     .withSeparator('\t')
@@ -50,6 +54,7 @@ public class IpToAsnLookuper {
     public List<String> getCountryCode(String domainName) {
         List<String> result = new ArrayList<>();
         List<String> ipAddresses = IpAddressChecker.INSTANCE.getIpv4AddressesFromDomainName(domainName);
+        logger.debug(domainName+" lookup IP address: "+ipAddresses);
         if(ipAddresses.isEmpty()) {
             return result;
         }
@@ -64,7 +69,7 @@ public class IpToAsnLookuper {
                 );
             }
         } catch (UnknownHostException e) {
-            throw new GeoLocationLookupException("Error corrupted when lookup target IP address.", e);
+            throw new GeoLocationLookupException("Error occurred when lookup target IP address.", e);
         }
         return result.stream().distinct().toList();
     }

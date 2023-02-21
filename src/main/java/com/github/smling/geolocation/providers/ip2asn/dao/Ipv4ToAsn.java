@@ -1,4 +1,4 @@
-package com.github.smling.geoLocation.providers.ip2asn.dao;
+package com.github.smling.geolocation.providers.ip2asn.dao;
 
 import lombok.Builder;
 import lombok.Getter;
