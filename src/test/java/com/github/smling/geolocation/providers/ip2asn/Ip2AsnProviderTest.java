@@ -1,5 +1,6 @@
 package com.github.smling.geolocation.providers.ip2asn;
 
+import com.github.smling.geolocation.providers.GeoLocationProvider;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -10,11 +11,11 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class IpToAsnProviderTest {
+class Ip2AsnProviderTest {
     @Test
     void canBeCreated() {
         assertDoesNotThrow(()->{
-            new IpToAsnProvider();
+            new Ip2AsnProvider();
         });
     }
 
@@ -22,8 +23,8 @@ class IpToAsnProviderTest {
     @MethodSource("mockGetCountryCodeHappyCase")
     void getCountryCodeHappyCase(String domainName, int expectedResult) {
         assertDoesNotThrow(()-> {
-            IpToAsnProvider ipToAsnProvider = new IpToAsnProvider();
-            List<String> countriesCode = ipToAsnProvider.getCountryCode(domainName);
+            GeoLocationProvider ip2AsnProvider = new Ip2AsnProvider();
+            List<String> countriesCode = ip2AsnProvider.getCountryCodes(domainName);
             assertNotNull(countriesCode, "Return country code not null. value: "+countriesCode);
             assertEquals(expectedResult, countriesCode.size(), "At least one country code returned");
             System.out.println("lookup country code for domain "+domainName+": "+countriesCode);
