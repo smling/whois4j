@@ -14,7 +14,7 @@ Compare with existing Java library. there are several advantage as below:
 
 |                   | Apache Common Net Library [^1]          | Whois XML API [^2]                          |                        whois4j                         |
 |-------------------|-----------------------------------------|---------------------------------------------|:------------------------------------------------------:|
-| Data source       | Less. <br/>(Only lookup whois.nina.org) | Variant<br/>(but not mentioned in website.) | Variant<br/>(source depends on domain name root zone.) |
+| Data source       | Less. <br/>(Only lookup [whois.nina.org](https://whois.iana.org/)) | Variant<br/>(but not mentioned in website.) | Variant<br/>(source depends on domain name root zone.) |
 | API Key required  | No                                      | Yes                                         |                           No                           |
 | Structural Data   | No                                      | Yes                                         |                     To-be support                      |
 | Geo location Data | No                                      | Yes                                         |                     To-be support                      |
