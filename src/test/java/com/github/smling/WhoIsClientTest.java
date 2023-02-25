@@ -36,6 +36,19 @@ class WhoIsClientTest {
     }
 
     @ParameterizedTest
+    @MethodSource("mockLookUpWithSocketOptionHappyCases")
+    void lookupWithSocketOptionHappyCase(String domainName, SocketOption socketOption) {
+        assertDoesNotThrow(()->{
+            WhoIsClient whoIsClient = new WhoIsClient();
+            String result = whoIsClient.lookup(domainName, socketOption);
+            assertNotNull(result, "whois lookup response:\n" +
+                    result);
+            assertTrue(result.length() > 0);
+            System.out.println("whois lookup response: \n"+result);
+        });
+    }
+
+    @ParameterizedTest
     @MethodSource("mockLookUpUnhappyCases")
     void lookupUnhappyCase(String domainName, Class<? extends Exception> exceptionClass) {
         assertThrowsExactly(exceptionClass, ()->{
@@ -76,6 +89,13 @@ class WhoIsClientTest {
                 Arguments.of("apple"),
                 Arguments.of("google.co.az"),
                 Arguments.of("github.com")
+        );
+    }
+
+    static Stream<Arguments> mockLookUpWithSocketOptionHappyCases() {
+        return Stream.of(
+                Arguments.of("google.com", WhoIsClient.DEFAULT_SOCKET_OPTION),
+                Arguments.of("google.com", null)
         );
     }
 

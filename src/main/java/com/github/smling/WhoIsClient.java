@@ -9,7 +9,9 @@ import com.github.smling.utils.IpAddressChecker;
 import com.github.smling.utils.StringUtil;
 
 import java.io.*;
+import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.SocketAddress;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
@@ -32,14 +34,13 @@ public class WhoIsClient {
      * Default Whois Lookup query.
      */
     protected static final String DEFAULT_WHOIS_LOOKUP_QUERY = "$addr\r\n";
-    /**
-     * Default Whois server connection timeout.
-     */
-    protected static final int DEFAULT_WHOIS_LOOKUP_SOCKET_TIMEOUT = 5000;
-    /**
-     * Default Whois server connection TCP delay enable or not.
-     */
-    protected static final boolean DEFAULT_WHOIS_LOOKUP_SOCKET_TCP_NO_DELAY = true;
+
+    public static final SocketOption DEFAULT_SOCKET_OPTION = SocketOption.builder()
+            .connectionTimeout(3000)
+            .idleTimeout(3000)
+            .tcpNoDelay(true)
+            .keepAlive(false)
+            .build();
     /**
      * Deserialize Server lists from servers.json
      */
@@ -50,9 +51,13 @@ public class WhoIsClient {
      * @throws JsonCastingException Throw when error from deserialize servers.json.
      */
     public WhoIsClient() throws JsonCastingException {
+        this("/servers.json");
+    }
+
+    private WhoIsClient(String lookupServerFilePath) {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
-            InputStream fileInputStream = WhoIsClient.class.getResourceAsStream("/servers.json");
+            InputStream fileInputStream = WhoIsClient.class.getResourceAsStream(lookupServerFilePath);
             Server[] serverArray = objectMapper.readValue(fileInputStream, Server[].class);
             servers = Arrays.asList(serverArray);
             if(Objects.nonNull(fileInputStream)) {
@@ -82,29 +87,40 @@ public class WhoIsClient {
      * @return Lookup response in String.
      */
     public String lookup(String domainName) {
+        return this.lookup(domainName, DEFAULT_SOCKET_OPTION);
+    }
+
+    public String lookup(String domainName, SocketOption socketOption) {
+        if(Objects.isNull(socketOption)) {
+            socketOption = DEFAULT_SOCKET_OPTION;
+        }
         String domainNameSuffix = DomainNameUtil.INSTANCE.getDomainNameSuffix(domainName);
         Server lookupServer = servers.stream()
                 .filter(o->domainNameSuffix.equals(o.getSuffix()))
                 .findFirst()
                 .orElseThrow(()->new DomainNameLookupException(String.format("Domain name %s could not be lookup.", domainNameSuffix)));
-        return this.lookup(domainName, lookupServer);
+        return this.lookup(domainName, socketOption, lookupServer);
     }
 
     /**
      * Whois lookup domain name.
      * @param domainName Domain name to be lookup.
+     * @param socketOption Socket option.
      * @param server Whois server to be connected.
      * @return Lookup response in String.
      */
-    private String lookup(String domainName, Server server) {
+    private String lookup(String domainName, SocketOption socketOption, Server server) {
         if(StringUtil.INSTANCE.isNullOrBlank(domainName)) {
             throw new DomainNameLookupException("domainName could not be null, empty or blank.");
         }
         String lookupServerHostName = getWhoisLookupHost(server);
         String result;
-        try(Socket lookupServerSocket = new Socket(lookupServerHostName, DEFAULT_WHOIS_LOOKUP_PORT)) {
-            lookupServerSocket.setSoTimeout(DEFAULT_WHOIS_LOOKUP_SOCKET_TIMEOUT);
-            lookupServerSocket.setTcpNoDelay(DEFAULT_WHOIS_LOOKUP_SOCKET_TCP_NO_DELAY);
+        SocketAddress socketAddress = new InetSocketAddress(lookupServerHostName, DEFAULT_WHOIS_LOOKUP_PORT);
+        try(Socket lookupServerSocket = new Socket()) {
+            lookupServerSocket.setSoTimeout(socketOption.getIdleTimeout());
+            lookupServerSocket.setTcpNoDelay(socketOption.isTcpNoDelay());
+            lookupServerSocket.setKeepAlive(socketOption.isKeepAlive());
+            lookupServerSocket.connect(socketAddress, socketOption.getConnectionTimeout());
             String query = getWhoisLookupQuery(domainName, server);
             OutputStream outputStream = lookupServerSocket.getOutputStream();
             byte[] queryByte = query.getBytes(StandardCharsets.ISO_8859_1);
@@ -135,6 +151,5 @@ public class WhoIsClient {
                 DEFAULT_WHOIS_LOOKUP_QUERY :
                 lookupServer.getQuery();
         return query.replace("$addr", domainName);
-
     }
 }
