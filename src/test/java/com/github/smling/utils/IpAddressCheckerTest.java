@@ -69,6 +69,18 @@ class IpAddressCheckerTest {
                         true
                 ),
                 Arguments.of(
+                        InetAddress.getByName("10.2.0.3"),
+                        InetAddress.getByName("10.0.0.0"),
+                        InetAddress.getByName("10.0.0.255"),
+                        true
+                ),
+                Arguments.of(
+                        InetAddress.getByName("192.168.0.3"),
+                        InetAddress.getByName("192.168.0.0"),
+                        InetAddress.getByName("192.168.1.255"),
+                        true
+                ),
+                Arguments.of(
                         InetAddress.getByName("1.0.0.3"),
                         InetAddress.getByName("1.0.0.5"),
                         InetAddress.getByName("1.0.0.255"),
