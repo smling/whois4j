@@ -42,7 +42,7 @@ Set tings in `setting.xml` for point to GitHub package repository.
 Settings in `pom.xml` for adding dependency.
 ```xml
 <dependency>
-    <groupId>com.github.smling</groupId>
+    <groupId>io.github.smling</groupId>
     <artifactId>whois4j</artifactId>
     <version>1.0.0-SNAPSHOT</version>
 </dependency>
@@ -64,8 +64,9 @@ dependencies {
 ```
 # Usage
 Sample code to get whois response of domain `github.com`.
+
 ```java
-import com.github.smling.WhoIsClient;
+import io.github.smling.WhoIsClient;
 
 public class sample {
     public static void main(String[] args) {
