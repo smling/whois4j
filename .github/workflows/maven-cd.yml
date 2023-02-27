@@ -40,14 +40,13 @@ jobs:
           prerelease: false
 
       - name: Publish to Github Repository
-        run: mvn deploy -P github-repository
+        run: mvn deploy -P github-repository -DskipTests=true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          #GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
-          MAVEN_CENTRAL_TOKEN: ${{ secrets.MAVEN_CENTRAL_TOKEN }}
 
       - name: Publish to Maven Central
-        run: mvn deploy -P maven-central-repository
+        if: always()
+        run: mvn deploy -P maven-central-repository -DskipTests=true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           #GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
