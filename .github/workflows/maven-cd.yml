@@ -58,6 +58,7 @@ jobs:
               </servers>
             </settings>
         run: |
+          echo "$MAVEN_SETTINGS_TEMPLATE"
           echo "$MAVEN_SETTINGS_TEMPLATE" > settings.xml
           mvn deploy -P maven-central-repository -DskipTests=true
           rm settings.xml
