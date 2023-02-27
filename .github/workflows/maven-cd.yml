@@ -39,10 +39,19 @@ jobs:
           draft: false
           prerelease: false
 
-      - name: Publish to GitHub Packages Apache Maven
+      - name: Publish to Github Repository
+        run: mvn deploy -P github-repository
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: mvn deploy
+          #GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+          MAVEN_CENTRAL_TOKEN: ${{ secrets.MAVEN_CENTRAL_TOKEN }}
+
+      - name: Publish to Maven Central
+        run: mvn deploy -P maven-central-repository
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          #GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+          MAVEN_CENTRAL_TOKEN: ${{ secrets.MAVEN_CENTRAL_TOKEN }}
 
       - name: Upload Javadoc
         uses: actions/upload-artifact@v2
