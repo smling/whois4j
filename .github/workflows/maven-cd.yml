@@ -51,7 +51,7 @@ jobs:
           MAVEN_PASSWORD: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
         run: |
           envsubst < settings-template.xml > settings.xml
-          mvn deploy -P maven-central-repository -DskipTests=true
+          mvn deploy -P maven-central-repository -DskipTests=true --settings settings.xml
           rm settings.xml
 
       - name: Upload Javadoc
