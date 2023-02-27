@@ -40,19 +40,26 @@ jobs:
           prerelease: false
 
       - name: Publish to Github Repository
-        run: mvn deploy -P github-repository -DskipTests=true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: mvn deploy -P github-repository -DskipTests=true
 
       - name: Publish to Maven Central
         if: always()
-        run: mvn deploy -P maven-central-repository -DskipTests=true
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          #GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
-          MAVEN_CENTRAL_TOKEN: ${{ secrets.MAVEN_CENTRAL_TOKEN }}
-          MAVEN_USERNAME: ${{ secrets.MAVEN_CENTRAL_USER }}
-          MAVEN_PASSWORD: ${{ secrets.MAVEN_CENTRAL_TOKEN }}
+          MAVEN_SETTINGS_TEMPLATE: |
+            <settings>
+              <servers>
+                <server>
+                  <id>ossrh</id>
+                  <username>${{ secrets.MAVEN_CENTRAL_USER }}</username>
+                  <password>${{ secrets.MAVEN_CENTRAL_TOKEN }}</password>
+                </server>
+              </servers>
+            </settings>
+        run: |
+          echo "$MAVEN_SETTINGS_TEMPLATE" > settings.xml
+          mvn deploy -P maven-central-repository -DskipTests=true
 
       - name: Upload Javadoc
         uses: actions/upload-artifact@v2
