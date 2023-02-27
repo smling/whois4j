@@ -47,21 +47,23 @@ jobs:
       - name: Publish to Maven Central
         if: always()
         env:
+          MAVEN_USER: ${{ secrets.MAVEN_CENTRAL_USER }}
+          MAVEN_PASSWORD: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
           MAVEN_SETTINGS_TEMPLATE: |
             <settings>
               <servers>
                 <server>
                   <id>ossrh</id>
-                  <username>${{ secrets.MAVEN_CENTRAL_USER }}</username>
-                  <password>${{ secrets.MAVEN_CENTRAL_PASSWORD }}</password>
+                  <username>$MAVEN_USER</username>
+                  <password>$MAVEN_PASSWORD</password>
                 </server>
               </servers>
             </settings>
         run: |
-          echo "$MAVEN_SETTINGS_TEMPLATE"
-          echo "$MAVEN_SETTINGS_TEMPLATE" > settings.xml
+          echo "$MAVEN_SETTINGS_TEMPLATE" > settings_temp.xml
+          envsubst < settings-temp.xml > settings.xml
           mvn deploy -P maven-central-repository -DskipTests=true
-          rm settings.xml
+          rm settings.xml settlings-temp.xml
 
       - name: Upload Javadoc
         uses: actions/upload-artifact@v2
