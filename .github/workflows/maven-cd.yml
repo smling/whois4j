@@ -53,7 +53,7 @@ jobs:
                 <server>
                   <id>ossrh</id>
                   <username>${{ secrets.MAVEN_CENTRAL_USER }}</username>
-                  <password>${{ secrets.MAVEN_CENTRAL_TOKEN }}</password>
+                  <password>${{ secrets.MAVEN_CENTRAL_PASSWORD }}</password>
                 </server>
               </servers>
             </settings>
